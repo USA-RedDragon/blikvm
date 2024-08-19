@@ -10,18 +10,6 @@ ARG ARM_TRUSTED_FIRMWARE_VERSION=v2.11.0
 
 RUN git clone --branch ${ARM_TRUSTED_FIRMWARE_VERSION} --depth 1 --single-branch https://review.trustedfirmware.org/TF-A/trusted-firmware-a
 
-FROM alpine AS src-crust
-
-RUN apk add --no-cache \
-    git
-
-WORKDIR /usr/src
-
-# renovate: datasource=github-tags depName=crust-firmware/crust
-ARG CRUST_VERSION=v0.6
-
-RUN git clone --branch ${CRUST_VERSION} --depth 1 --single-branch https://github.com/crust-firmware/crust.git
-
 FROM alpine AS src-uboot
 
 RUN apk add --no-cache \
@@ -58,38 +46,6 @@ RUN make -j$(nproc) PLAT=sun50i_h616 bl31
 
 RUN mkdir -p /out && cp build/sun50i_h616/release/bl31.bin /out/bl31.bin
 
-FROM alpine AS build-crust
-
-RUN apk add --no-cache \
-    gcc-or1k-elf \
-    newlib-or1k-elf \
-    make \
-    musl-dev \
-    flex \
-    bison \
-    clang \
-    llvm \
-    lld
-
-ENV CC=clang
-ENV AR=llvm-ar
-ENV LD=ld.lld
-ENV STRIP=llvm-strip
-ENV OBJCOPY=llvm-objcopy
-ENV OBJDUMP=llvm-objdump
-ENV READELF=llvm-readelf
-
-COPY --from=src-crust /usr/src/crust /usr/src/crust
-
-WORKDIR /usr/src/crust
-
-ENV CROSS_COMPILE=or1k-elf-
-
-# https://github.com/crust-firmware/crust/tree/master/configs
-RUN make pine64_plus_defconfig && make -j$(nproc) scp
-
-RUN mkdir -p /out && cp build/scp/scp.bin /out/scp.bin
-
 FROM alpine AS build-uboot
 
 RUN apk add --no-cache \
@@ -102,27 +58,23 @@ RUN apk add --no-cache \
     python3 \
     python3-dev \
     py3-setuptools \
-    swig
+    swig \
+    gcc-aarch64-none-elf \
+    openssl-dev
 
 COPY --from=src-uboot /usr/src/u-boot /usr/src/u-boot
 COPY --from=build-trusted-firmware-a /out/bl31.bin /usr/src/u-boot/bl31.bin
-COPY --from=build-crust /out/scp.bin /usr/src/u-boot/scp.bin
-
-ENV SCP=/usr/src/u-boot/scp.bin
-ENV BL31=/usr/src/u-boot/bl31.bin
 
 WORKDIR /usr/src/u-boot
 
+ENV BL31=/usr/src/u-boot/bl31.bin
+ENV SCP=/dev/null
+ENV HOSTCC=clang
 ENV CC=clang
-ENV AR=llvm-ar
+ENV CROSS_COMPILE=aarch64-none-elf-
 ENV LD=ld.lld
-ENV STRIP=llvm-strip
-ENV OBJCOPY=llvm-objcopy
-ENV OBJDUMP=llvm-objdump
-ENV READELF=llvm-readelf
 
 COPY mangopi_mcore_defconfig /usr/src/u-boot/configs/mangopi_mcore_defconfig
-
 RUN make -j$(nproc) mangopi_mcore_defconfig
 RUN make -j$(nproc)
 
