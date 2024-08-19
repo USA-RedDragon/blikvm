@@ -2,5 +2,13 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>USA-RedDragon/renovate-configs"
+  ],
+  "packageRules": [
+    {
+      "matchDepNames": [
+        "u-boot"
+      ],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.?(?<patch>\\d+)?$"
+    }
   ]
 }

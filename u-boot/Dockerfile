@@ -17,10 +17,10 @@ RUN apk add --no-cache \
 
 WORKDIR /usr/src
 
-# renovate: datasource=github-tags extractVersion=^v(?<version>.*)$ depName=u-boot/u-boot
+# renovate: datasource=github-tags extractVersion=^v(?<version>.*)$ versioning=regex depName=u-boot/u-boot
 ARG UBOOT_VERSION=2024.04
 
-RUN git clone --branch ${UBOOT_VERSION} --depth 1 --single-branch https://github.com/u-boot/u-boot.git
+RUN git clone --branch v${UBOOT_VERSION} --depth 1 --single-branch https://github.com/u-boot/u-boot.git
 
 FROM alpine AS build-trusted-firmware-a
 
