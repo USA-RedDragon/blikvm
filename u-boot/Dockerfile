@@ -17,7 +17,7 @@ RUN apk add --no-cache \
 
 WORKDIR /usr/src
 
-# renovate: datasource=github-tags depName=u-boot/u-boot
+# renovate: datasource=github-tags versioning=semver-coerced depName=u-boot/u-boot
 ARG UBOOT_VERSION=v2024.04
 
 RUN git clone --branch ${UBOOT_VERSION} --depth 1 --single-branch https://github.com/u-boot/u-boot.git
