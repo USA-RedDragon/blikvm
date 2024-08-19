@@ -49,13 +49,13 @@ ENV KBUILD_BUILD_HOST=linux
 COPY kernel.config .config
 
 RUN make -j$(nproc) dtbs
-RUN make -j$(nproc) Image.zst
+RUN make -j$(nproc) Image
 RUN make -j$(nproc) modules
 RUN mkdir -p /out/modules
 RUN mkdir -p /out/headers
 RUN make -j$(nproc) INSTALL_MOD_PATH=/out/modules modules_install
 RUN make -j$(nproc) INSTALL_HDR_PATH=/out/headers headers_install
-RUN cp arch/arm64/boot/Image.zst /out/Image.zst
+RUN cp arch/arm64/boot/Image /out/Image
 RUN cp arch/arm64/boot/dts/allwinner/sun50i-h616-mangopi-mcore.dtb /out/sun50i-h616-mangopi-mcore.dtb
 
 FROM alpine
