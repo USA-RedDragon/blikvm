@@ -75,6 +75,8 @@ ENV CROSS_COMPILE=aarch64-none-elf-
 ENV LD=ld.lld
 
 COPY mangopi_mcore_defconfig /usr/src/u-boot/configs/mangopi_mcore_defconfig
+COPY sun50i-h616-mangopi-mcore.dts /usr/src/u-boot/arch/arm/dts/sun50i-h616-mangopi-mcore.dts
+RUN sed -i "s%sun50i-h616-orangepi-zero2.dtb \\\%sun50i-h616-orangepi-zero2.dtb \\\\\n\\tsun50i-h616-mangopi-mcore.dtb \\\%" /usr/src/u-boot/arch/arm/dts/Makefile
 RUN make -j$(nproc) mangopi_mcore_defconfig
 RUN make -j$(nproc)
 
