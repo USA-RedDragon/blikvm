@@ -30,9 +30,12 @@ RUN apk add --no-cache \
     zstd \
     tar \
     xz \
-    rsync
+    rsync \
+    patch
 
 COPY --from=src /usr/src/linux /usr/src/linux
+COPY 0001-arm64-dts-sun50i-h616-add-emac1-node.patch /usr/src/linux/0001-arm64-dts-sun50i-h616-add-emac1-node.patch
+RUN patch -p1 -d /usr/src/linux < /usr/src/linux/0001-arm64-dts-sun50i-h616-add-emac1-node.patch
 
 COPY sun50i-h616-mangopi-mcore.dts /usr/src/linux/arch/arm64/boot/dts/allwinner/sun50i-h616-mangopi-mcore.dts
 RUN echo "dtb-\$(CONFIG_ARCH_SUNXI) += sun50i-h616-mangopi-mcore.dtb" >> /usr/src/linux/arch/arm64/boot/dts/allwinner/Makefile

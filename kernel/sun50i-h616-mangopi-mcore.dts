@@ -17,6 +17,7 @@
 
 	aliases {
 		ethernet0 = &emac0;
+		ethernet1 = &emac1;
 		serial0 = &uart0;
 		mmc0 =&mmc0;
 		mmc1 =&mmc1;
@@ -67,6 +68,19 @@
 	};
 };
 
+&pio {
+	vcc-pc-supply = <&reg_vcc3v3>;
+	vcc-pg-supply = <&reg_vcc3v3>;
+	vcc-pi-supply = <&reg_vcc3v3>;
+
+	rmii_pins: rmii-pins {
+		pins = "PA0", "PA1", "PA2", "PA3", "PA4",
+				"PA5", "PA6", "PA7", "PA8", "PA9";
+		function = "emac1";
+		drive-strength = <40>;
+	};
+};
+
 &cpu0 {
 	cpu-supply = <&reg_dcdca>;
 	status = "okay";
@@ -105,6 +119,24 @@
 	ext_rgmii_phy: ethernet-phy@1 {
 		compatible = "ethernet-phy-ieee802.3-c22";
 		reg = <1>;
+	};
+};
+
+&emac1{
+	pinctrl-names = "default";
+	pinctrl-0 = <&rmii_pins>;
+	phy-mode = "rmii";
+	phy-handle = <&emd_rgmii_phy>;
+	phy-supply = <&reg_aldo1>;
+	allwinner,rx-delay-ps = <3100>;
+	allwinner,tx-delay-ps = <700>;
+	status = "okay";
+};
+
+&mdio1 {
+	emd_rgmii_phy: ethernet-phy@0 {
+		compatible = "ethernet-phy-ieee802.3-c22";
+		reg = <0>;
 	};
 };
 

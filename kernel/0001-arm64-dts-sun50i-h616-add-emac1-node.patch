@@ -1,0 +1,42 @@
+From 24f838afc65be69bbde46ab7789ac14a7f08ed7a Mon Sep 17 00:00:00 2001
+From: Jacob McSwain <jacob@mcswain.dev>
+Date: Tue, 20 Aug 2024 15:08:08 -0500
+Subject: [PATCH] arm64: dts: sun50i-h616: add emac1 node
+
+---
+ .../arm64/boot/dts/allwinner/sun50i-h616.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
+index 921d5f61d..9f2e5a757 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
+@@ -574,6 +574,25 @@ mdio0: mdio {
+ 			};
+ 		};
+ 
++		emac1: ethernet@5030000 {
++			compatible = "allwinner,sun50i-h616-emac";
++			syscon = <&syscon 1>;
++			reg = <0x05030000 0x10000>;
++			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++			resets = <&ccu RST_BUS_EMAC1>;
++			reset-names = "stmmaceth";
++			clocks = <&ccu CLK_BUS_EMAC1>;
++			clock-names = "stmmaceth";
++			status = "disabled";
++
++			mdio1: mdio {
++				compatible = "snps,dwmac-mdio";
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
+ 		spdif: spdif@5093000 {
+ 			compatible = "allwinner,sun50i-h616-spdif";
+ 			reg = <0x05093000 0x400>;
+-- 
+2.46.0
+
