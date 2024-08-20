@@ -13,12 +13,12 @@ mkimage -C none -A arm64 -T script -d u-boot/boot.cmd out/boot.scr
 cp u-boot/boot.cmd out/boot.cmd
 
 rm -f out/sdcard.img
-dd if=/dev/zero of=out/sdcard.img bs=1M count=150
+dd if=/dev/zero of=out/sdcard.img bs=1M count=300
 sfdisk out/sdcard.img << EOF
 start=2048,size=102400,type=0c,bootable
-start=104448,type=83
+type=83
 EOF
-dd if=out/u-boot-sunxi-with-spl.bin of=out/sdcard.img bs=1024 seek=8
+dd if=out/u-boot-sunxi-with-spl.bin of=out/sdcard.img bs=8k seek=1 conv=notrunc
 
 sudo losetup -D
 LODEV="$(sudo losetup -fP out/sdcard.img --show)"
@@ -43,8 +43,6 @@ sudo losetup -D
 # if /run/media/reddragon/armbian_root exists
 if [ -d "/run/media/reddragon/armbian_root" ]; then
     sudo cp -v out/Image /run/media/reddragon/armbian_root/boot/
-    sudo cp -v out/boot.scr /run/media/reddragon/armbian_root/boot/
-    sudo cp -v out/boot.cmd /run/media/reddragon/armbian_root/boot/
     sudo cp -v out/sun50i-h616-mangopi-mcore.dtb /run/media/reddragon/armbian_root/boot/
     MODULE_VERSION_DIR="$(ls out/modules/lib/modules)"
     sudo rm -rf "/run/media/reddragon/armbian_root/lib/modules/$MODULE_VERSION_DIR"
