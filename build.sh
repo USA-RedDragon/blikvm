@@ -44,7 +44,10 @@ sudo losetup -D
 if [ -d "/run/media/reddragon/armbian_root" ]; then
     sudo cp -v out/Image /run/media/reddragon/armbian_root/boot/
     sudo cp -v out/sun50i-h616-mangopi-mcore.dtb /run/media/reddragon/armbian_root/boot/
+    sudo cp -v out/boot.existing.scr /run/media/reddragon/armbian_root/boot/boot.scr
+    sudo cp -v out/boot.existing.cmd /run/media/reddragon/armbian_root/boot/boot.cmd
     MODULE_VERSION_DIR="$(ls out/modules/lib/modules)"
     sudo rm -rf "/run/media/reddragon/armbian_root/lib/modules/$MODULE_VERSION_DIR"
     sudo cp -r -v "out/modules/lib/modules/$MODULE_VERSION_DIR" /run/media/reddragon/armbian_root/lib/modules/
+    sudo cp -r -v "out/firmware/*" /run/media/reddragon/armbian_root/lib/firmware/
 fi

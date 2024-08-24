@@ -10,6 +10,18 @@ ARG LINUX_VERSION=v6.10.6
 
 RUN git clone --branch ${LINUX_VERSION} --depth 1 --single-branch git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
 
+FROM alpine AS linux-firmware-src
+
+# renovate: datasource=git-tags depName=https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+ARG LINUX_FIRMWARE_VERSION=20240811
+
+RUN apk add --no-cache \
+    git
+
+WORKDIR /usr/src
+
+RUN git clone --branch ${LINUX_FIRMWARE_VERSION} --depth 1 --single-branch git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+
 FROM alpine AS build
 
 RUN apk add --no-cache \
@@ -66,5 +78,11 @@ RUN export KBUILD_BUILD_TIMESTAMP=$(TZ=UTC git show -s --date=format-local:'%Y-%
 FROM alpine
 
 COPY --from=build /out /built
+RUN mkdir -p /built/firwmware
+RUN mkdir -p /built/firwmware/rtw88
+RUN mkdir -p /built/firwmware/rtl_bt
+COPY --from=linux-firmware-src /usr/src/linux-firmware/rtw88/rtw8723d_fw.bin /built/firwmware/rtw88/rtw8723d_fw.bin
+COPY --from=linux-firmware-src /usr/src/linux-firmware/rtl_bt/rtl8723ds_fw.bin /built/firwmware/rtl_bt/rtl8723ds_fw.bin
+COPY --from=linux-firmware-src /usr/src/linux-firmware/rtl_bt/rtl8723ds_config.bin /built/firwmware/rtl_bt/rtl8723ds_config.bin
 
 ENTRYPOINT [ "sh", "-c", "exec cp -r -v /built/* /out" ]
