@@ -35,7 +35,11 @@ RUN apk add --no-cache \
 
 COPY --from=src /usr/src/linux /usr/src/linux
 COPY 0001-arm64-dts-sun50i-h616-add-emac1-node.patch /usr/src/linux/0001-arm64-dts-sun50i-h616-add-emac1-node.patch
+COPY 0002-drv-net-stmmac-dwmac-sun8i-second-EMAC-clock-registe.patch /usr/src/linux/0002-drv-net-stmmac-dwmac-sun8i-second-EMAC-clock-registe.patch
+COPY 0003-mfd-ax20x-Add-suppport-for-AXP1530-PMIC.patch /usr/src/linux/0003-mfd-ax20x-Add-suppport-for-AXP1530-PMIC.patch
 RUN patch -p1 -d /usr/src/linux < /usr/src/linux/0001-arm64-dts-sun50i-h616-add-emac1-node.patch
+RUN patch -p1 -d /usr/src/linux < /usr/src/linux/0002-drv-net-stmmac-dwmac-sun8i-second-EMAC-clock-registe.patch
+RUN patch -p1 -d /usr/src/linux < /usr/src/linux/0003-mfd-ax20x-Add-suppport-for-AXP1530-PMIC.patch
 
 COPY sun50i-h616-mangopi-mcore.dts /usr/src/linux/arch/arm64/boot/dts/allwinner/sun50i-h616-mangopi-mcore.dts
 RUN echo "dtb-\$(CONFIG_ARCH_SUNXI) += sun50i-h616-mangopi-mcore.dtb" >> /usr/src/linux/arch/arm64/boot/dts/allwinner/Makefile
