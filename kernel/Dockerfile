@@ -83,7 +83,6 @@ RUN mkdir -p /built/firwmware
 RUN mkdir -p /built/firwmware/rtw88
 RUN mkdir -p /built/firwmware/rtl_bt
 COPY --from=linux-firmware-src /usr/src/linux-firmware/rtw88/rtw8723d_fw.bin /built/firwmware/rtw88/rtw8723d_fw.bin
-COPY --from=linux-firmware-src /usr/src/linux-firmware/rtl_bt/rtl8723ds_fw.bin /built/firwmware/rtl_bt/rtl8723ds_fw.bin
-COPY --from=linux-firmware-src /usr/src/linux-firmware/rtl_bt/rtl8723ds_config.bin /built/firwmware/rtl_bt/rtl8723ds_config.bin
+COPY firmware/rtl_bt /built/firwmware/rtl_bt
 
 ENTRYPOINT [ "sh", "-c", "exec cp -r -v /built/* /out" ]
