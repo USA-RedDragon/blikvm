@@ -1,4 +1,4 @@
-From 9885aa5f0ba5210a0cbb6a95111d0463694aff2a Mon Sep 17 00:00:00 2001
+From 9719bdb4e14955df210d89d44642585ae6581cb7 Mon Sep 17 00:00:00 2001
 From: Martin Botka <martin.botka@somainline.org>
 Date: Sat, 24 Aug 2024 02:09:20 -0500
 Subject: [PATCH 3/3] mfd: ax20x: Add suppport for AXP1530 PMIC
@@ -10,9 +10,9 @@ seen it only paired with H616 SoC.
 ---
  drivers/mfd/axp20x-i2c.c             |  2 +
  drivers/mfd/axp20x.c                 | 61 ++++++++++++++++++++++++++++
- drivers/regulator/axp20x-regulator.c | 38 +++++++++++++++++
+ drivers/regulator/axp20x-regulator.c | 46 +++++++++++++++++++++
  include/linux/mfd/axp20x.h           | 32 +++++++++++++++
- 4 files changed, 133 insertions(+)
+ 4 files changed, 141 insertions(+)
 
 diff --git a/drivers/mfd/axp20x-i2c.c b/drivers/mfd/axp20x-i2c.c
 index b8e7ac89f..8756a7d7e 100644
@@ -149,7 +149,7 @@ index dacd3c96c..0f332d83b 100644
  		axp20x->nr_cells = ARRAY_SIZE(axp192_cells);
  		axp20x->cells = axp192_cells;
 diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index f3c447ecd..1541b9a44 100644
+index f3c447ecd..bb4a898a3 100644
 --- a/drivers/regulator/axp20x-regulator.c
 +++ b/drivers/regulator/axp20x-regulator.c
 @@ -1297,6 +1297,40 @@ static const struct regulator_desc axp15060_regulators[] = {
@@ -193,7 +193,22 @@ index f3c447ecd..1541b9a44 100644
  static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
  {
  	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
-@@ -1548,6 +1582,10 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+@@ -1338,6 +1372,14 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+ 		break;
+ 	case AXP313A_ID:
+ 	case AXP717_ID:
++	case AXP1530_ID:
++		/* The DCDC PWM frequency seems to be fixed to 3 MHz. */
++		if (dcdcfreq != 0) {
++			dev_err(&pdev->dev,
++				"DCDC frequency on this PMIC is fixed to 3 MHz.\n");
++			return -EINVAL;
++		}
++
+ 	case AXP15060_ID:
+ 		/* The DCDC PWM frequency seems to be fixed to 3 MHz. */
+ 		if (dcdcfreq != 0) {
+@@ -1548,6 +1590,10 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
  	bool drivevbus = false;
  
  	switch (axp20x->variant) {
