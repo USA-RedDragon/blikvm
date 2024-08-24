@@ -68,10 +68,8 @@ ENV KBUILD_BUILD_HOST=linux
 COPY kernel.config .config
 
 RUN export KBUILD_BUILD_TIMESTAMP=$(cat .kernel-version) \
-    && make -j$(nproc) Image dtbs modules \
-    && mkdir -p /out/modules \
+    && make -j$(nproc) Image dtbs \
     && mkdir -p /out/headers \
-    && make -j$(nproc) INSTALL_MOD_PATH=/out/modules modules_install \
     && make -j$(nproc) INSTALL_HDR_PATH=/out/headers headers_install \
     && cp arch/arm64/boot/Image /out/Image \
     && cp .config /out/config \

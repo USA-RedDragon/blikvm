@@ -35,8 +35,8 @@ sudo cp -v out/Image /mnt/sdcard/boot/
 sudo cp -v out/boot.scr /mnt/sdcard/boot/
 sudo cp -v out/boot.cmd /mnt/sdcard/boot/
 sudo cp -v out/sun50i-h616-mangopi-mcore.dtb /mnt/sdcard/boot/
-sudo mkdir -p /mnt/sdcard/lib/modules/
-sudo cp -r -v out/modules/lib/modules/$(ls out/modules/lib/modules) /mnt/sdcard/lib/modules/
+sudo mkdir -p /mnt/sdcard/lib/firmware/
+sudo cp -r -v out/firmware/* /mnt/sdcard/lib/firmware/
 sudo sync
 sudo umount /mnt/sdcard/boot
 sudo umount /mnt/sdcard
@@ -48,8 +48,5 @@ if [ -d "/run/media/reddragon/armbian_root" ]; then
     sudo cp -v out/sun50i-h616-mangopi-mcore.dtb /run/media/reddragon/armbian_root/boot/
     sudo cp -v out/boot.existing.scr /run/media/reddragon/armbian_root/boot/boot.scr
     sudo cp -v out/boot.existing.cmd /run/media/reddragon/armbian_root/boot/boot.cmd
-    MODULE_VERSION_DIR="$(ls out/modules/lib/modules)"
-    sudo rm -rf "/run/media/reddragon/armbian_root/lib/modules/$MODULE_VERSION_DIR"
-    sudo cp -r -v "out/modules/lib/modules/$MODULE_VERSION_DIR" /run/media/reddragon/armbian_root/lib/modules/
     sudo cp -r -v out/firmware/* /run/media/reddragon/armbian_root/lib/firmware/
 fi
