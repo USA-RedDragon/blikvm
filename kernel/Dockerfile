@@ -79,10 +79,10 @@ RUN export KBUILD_BUILD_TIMESTAMP=$(TZ=UTC git show -s --date=format-local:'%Y-%
 FROM alpine
 
 COPY --from=build /out /built
-RUN mkdir -p /built/firwmware
-RUN mkdir -p /built/firwmware/rtw88
-RUN mkdir -p /built/firwmware/rtl_bt
-COPY --from=linux-firmware-src /usr/src/linux-firmware/rtw88/rtw8723d_fw.bin /built/firwmware/rtw88/rtw8723d_fw.bin
-COPY firmware/rtl_bt /built/firwmware/rtl_bt
+RUN mkdir -p /built/firmware
+RUN mkdir -p /built/firmware/rtw88
+RUN mkdir -p /built/firmware/rtl_bt
+COPY --from=linux-firmware-src /usr/src/linux-firmware/rtw88/rtw8723d_fw.bin /built/firmware/rtw88/rtw8723d_fw.bin
+COPY firmware/rtl_bt /built/firmware/rtl_bt
 
 ENTRYPOINT [ "sh", "-c", "exec cp -r -v /built/* /out" ]
