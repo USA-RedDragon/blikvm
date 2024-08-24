@@ -43,7 +43,8 @@ RUN apk add --no-cache \
     tar \
     xz \
     rsync \
-    patch
+    patch \
+    git
 
 COPY --from=src /usr/src/linux /usr/src/linux
 COPY 0001-arm64-dts-sun50i-h616-add-emac1-node.patch /usr/src/linux/0001-arm64-dts-sun50i-h616-add-emac1-node.patch
