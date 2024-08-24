@@ -10,7 +10,9 @@ docker run --rm -v $(pwd)/out:/out kernel
 docker build -t u-boot u-boot
 docker run --rm -v $(pwd)/out:/out u-boot
 mkimage -C none -A arm64 -T script -d u-boot/boot.cmd out/boot.scr
+mkimage -C none -A arm64 -T script -d u-boot/boot.existing.cmd out/boot.existing.scr
 cp u-boot/boot.cmd out/boot.cmd
+cp u-boot/boot.existing.cmd out/boot.existing.cmd
 
 rm -f out/sdcard.img
 dd if=/dev/zero of=out/sdcard.img bs=1M count=300
