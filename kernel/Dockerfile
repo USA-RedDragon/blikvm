@@ -13,7 +13,7 @@ RUN git clone --branch ${LINUX_VERSION} --depth 1 --single-branch git://git.kern
 FROM alpine AS linux-firmware-src
 
 # renovate: datasource=git-tags depName=https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-ARG LINUX_FIRMWARE_VERSION=20240811
+ARG LINUX_FIRMWARE_VERSION=20240709
 
 RUN apk add --no-cache \
     git
