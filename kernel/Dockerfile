@@ -9,6 +9,7 @@ WORKDIR /usr/src
 ARG LINUX_VERSION=v6.10.6
 
 RUN git clone --branch ${LINUX_VERSION} --depth 1 --single-branch git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+RUN cd linux && TZ=UTC git show -s --date=format-local:'%Y-%m-%d %H:%M:%S' --format=%cd HEAD > .kernel-version
 
 FROM alpine AS linux-firmware-src
 
@@ -43,8 +44,7 @@ RUN apk add --no-cache \
     tar \
     xz \
     rsync \
-    patch \
-    git
+    patch
 
 COPY --from=src /usr/src/linux /usr/src/linux
 COPY 0001-arm64-dts-sun50i-h616-add-emac1-node.patch /usr/src/linux/0001-arm64-dts-sun50i-h616-add-emac1-node.patch
@@ -67,7 +67,7 @@ ENV KBUILD_BUILD_HOST=linux
 
 COPY kernel.config .config
 
-RUN export KBUILD_BUILD_TIMESTAMP=$(TZ=UTC git show -s --date=format-local:'%Y-%m-%d %H:%M:%S' --format=%cd HEAD) \
+RUN export KBUILD_BUILD_TIMESTAMP=$(cat .kernel-version) \
     && make -j$(nproc) Image dtbs modules \
     && mkdir -p /out/modules \
     && mkdir -p /out/headers \
