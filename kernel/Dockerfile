@@ -48,22 +48,20 @@ WORKDIR /usr/src/linux
 
 ENV ARCH=arm64
 ENV LLVM=1
-ENV KBUILD_BUILD_TIMESTAMP='1970-01-01 00:00:00'
 ENV KBUILD_BUILD_VERSION=0
 ENV KBUILD_BUILD_USER=linux
 ENV KBUILD_BUILD_HOST=linux
 
 COPY kernel.config .config
 
-RUN make -j$(nproc) dtbs
-RUN make -j$(nproc) Image
-RUN make -j$(nproc) modules
-RUN mkdir -p /out/modules
-RUN mkdir -p /out/headers
-RUN make -j$(nproc) INSTALL_MOD_PATH=/out/modules modules_install
-RUN make -j$(nproc) INSTALL_HDR_PATH=/out/headers headers_install
-RUN cp arch/arm64/boot/Image /out/Image
-RUN cp arch/arm64/boot/dts/allwinner/sun50i-h616-mangopi-mcore.dtb /out/sun50i-h616-mangopi-mcore.dtb
+RUN export KBUILD_BUILD_TIMESTAMP=$(TZ=UTC git show -s --date=format-local:'%Y-%m-%d %H:%M:%S' --format=%cd HEAD) \
+    && make -j$(nproc) Image dtbs modules \
+    && mkdir -p /out/modules \
+    && mkdir -p /out/headers \
+    && make -j$(nproc) INSTALL_MOD_PATH=/out/modules modules_install \
+    && make -j$(nproc) INSTALL_HDR_PATH=/out/headers headers_install \
+    && cp arch/arm64/boot/Image /out/Image \
+    && cp arch/arm64/boot/dts/allwinner/sun50i-h616-mangopi-mcore.dtb /out/sun50i-h616-mangopi-mcore.dtb
 
 FROM alpine
 
