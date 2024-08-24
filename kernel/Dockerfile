@@ -73,6 +73,7 @@ RUN export KBUILD_BUILD_TIMESTAMP=$(TZ=UTC git show -s --date=format-local:'%Y-%
     && make -j$(nproc) INSTALL_MOD_PATH=/out/modules modules_install \
     && make -j$(nproc) INSTALL_HDR_PATH=/out/headers headers_install \
     && cp arch/arm64/boot/Image /out/Image \
+    && cp .config /out/config \
     && cp arch/arm64/boot/dts/allwinner/sun50i-h616-mangopi-mcore.dtb /out/sun50i-h616-mangopi-mcore.dtb
 
 FROM alpine
