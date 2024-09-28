@@ -6,7 +6,7 @@ RUN apk add --no-cache \
 WORKDIR /usr/src
 
 # renovate: datasource=git-tags depName=https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-ARG LINUX_VERSION=v6.10.6
+ARG LINUX_VERSION=v6.11
 
 RUN git clone --branch ${LINUX_VERSION} --depth 1 --single-branch git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
 RUN cd linux && TZ=UTC git show -s --date=format-local:'%Y-%m-%d %H:%M:%S' --format=%cd HEAD > .kernel-version
