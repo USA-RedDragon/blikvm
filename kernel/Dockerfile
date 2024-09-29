@@ -14,7 +14,7 @@ RUN cd linux && TZ=UTC git show -s --date=format-local:'%Y-%m-%d %H:%M:%S' --for
 FROM alpine AS linux-firmware-src
 
 # renovate: datasource=git-tags depName=https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-ARG LINUX_FIRMWARE_VERSION=20240811
+ARG LINUX_FIRMWARE_VERSION=20240909
 
 RUN apk add --no-cache \
     git
