@@ -6,7 +6,7 @@ RUN apk add --no-cache \
 WORKDIR /usr/src
 
 # renovate: datasource=git-tags depName=https://review.trustedfirmware.org/TF-A/trusted-firmware-a
-ARG ARM_TRUSTED_FIRMWARE_VERSION=v2.13.0
+ARG ARM_TRUSTED_FIRMWARE_VERSION=v2.14.0
 
 RUN git clone --branch ${ARM_TRUSTED_FIRMWARE_VERSION} --depth 1 --single-branch https://review.trustedfirmware.org/TF-A/trusted-firmware-a
 
