@@ -1,4 +1,4 @@
-FROM alpine AS src-trusted-firmware-a
+FROM alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS src-trusted-firmware-a
 
 RUN apk add --no-cache \
     git
@@ -10,7 +10,7 @@ ARG ARM_TRUSTED_FIRMWARE_VERSION=v2.15.0
 
 RUN git clone --branch ${ARM_TRUSTED_FIRMWARE_VERSION} --depth 1 --single-branch https://review.trustedfirmware.org/TF-A/trusted-firmware-a
 
-FROM alpine AS src-uboot
+FROM alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS src-uboot
 
 RUN apk add --no-cache \
     git
@@ -22,7 +22,7 @@ ARG UBOOT_VERSION=2024.10
 
 RUN git clone --branch v${UBOOT_VERSION} --depth 1 --single-branch https://github.com/u-boot/u-boot.git
 
-FROM alpine AS build-trusted-firmware-a
+FROM alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS build-trusted-firmware-a
 
 RUN apk add --no-cache \
     llvm \
@@ -46,7 +46,7 @@ RUN make -j$(nproc) PLAT=sun50i_h616 bl31
 
 RUN mkdir -p /out && cp build/sun50i_h616/release/bl31.bin /out/bl31.bin
 
-FROM alpine AS build-uboot
+FROM alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS build-uboot
 
 RUN apk add --no-cache \
     make \
@@ -82,7 +82,7 @@ RUN make -j$(nproc)
 
 RUN mkdir -p /out && cp u-boot-sunxi-with-spl.bin /out/u-boot-sunxi-with-spl.bin
 
-FROM alpine
+FROM alpine@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
 
 COPY --from=build-uboot /out/u-boot-sunxi-with-spl.bin /u-boot-sunxi-with-spl.bin
 
