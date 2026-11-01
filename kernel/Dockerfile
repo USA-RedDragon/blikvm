@@ -1,4 +1,4 @@
-FROM alpine AS src
+FROM alpine@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a AS src
 
 RUN apk add --no-cache \
     git
@@ -11,7 +11,7 @@ ARG LINUX_VERSION=v6.19.14
 RUN git clone --branch ${LINUX_VERSION} --depth 1 --single-branch git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
 RUN cd linux && TZ=UTC git show -s --date=format-local:'%Y-%m-%d %H:%M:%S' --format=%cd HEAD > .kernel-version
 
-FROM alpine AS linux-firmware-src
+FROM alpine@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a AS linux-firmware-src
 
 # renovate: datasource=git-tags depName=https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
 ARG LINUX_FIRMWARE_VERSION=20240811
@@ -23,7 +23,7 @@ WORKDIR /usr/src
 
 RUN git clone --branch ${LINUX_FIRMWARE_VERSION} --depth 1 --single-branch git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
 
-FROM alpine AS build
+FROM alpine@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a AS build
 
 RUN apk add --no-cache \
     make \
@@ -75,7 +75,7 @@ RUN export KBUILD_BUILD_TIMESTAMP=$(cat .kernel-version) \
     && cp .config /out/config \
     && cp arch/arm64/boot/dts/allwinner/sun50i-h616-mangopi-mcore.dtb /out/sun50i-h616-mangopi-mcore.dtb
 
-FROM alpine
+FROM alpine@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
 
 COPY --from=build /out /built
 RUN mkdir -p /built/firmware
